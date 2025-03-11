@@ -1,0 +1,11 @@
+aiogram
+aiogram-media-group
+asyncpg
+redis
+fluentogram
+sqlalchemy
+pytubefix
+httpx
+beautifulsoup4
+selenium
+free-proxy

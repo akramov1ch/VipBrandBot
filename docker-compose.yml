@@ -1,0 +1,78 @@
+services:
+  redis:
+    image: redis:alpine
+    networks:
+      - downloader-bot
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 20s
+      timeout: 10s
+      retries: 3
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: downloader_bot
+      POSTGRES_PASSWORD: 1545
+      POSTGRES_DB: bot_base
+    networks:
+      - downloader-bot
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+    healthcheck:
+      test: [ "CMD-SHELL", "PGPASSWORD='1545' pg_isready -h localhost -p 5432 -U downloader_bot -d bot_base" ]
+      interval: 20s
+      timeout: 10s
+      retries: 3
+
+  telegram-bot-api:
+    image: aiogram/telegram-bot-api:latest
+    environment:
+      TELEGRAM_API_ID: "27953479"
+      TELEGRAM_API_HASH: "da552ff3e977c4e4d54bdfbfc2390373"
+    volumes:
+      - ./files:/var/lib/telegram-bot-api
+    ports:
+      - "8081:8081"
+    networks:
+      - downloader-bot
+
+  bot:
+    build:
+      context: .
+      dockerfile: ./bot/Dockerfile
+    environment:
+      BOT_TOKEN: 8037850746:AAG6xtfRFugtpkkNoaitT8-mh1JLk1OM-Z8
+      BASE_SERVER_URL: http://telegram-bot-api:8081
+      BASE_CHANNEL_ID: -1002195963454
+      OWNER_TG_ID: 5773326948
+      DB_USER: downloader_bot
+      DB_PASSWORD: 1545
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: bot_base
+    networks:
+      - downloader-bot
+    volumes:
+      - ./bot/logs:/app/bot/logs
+      - ./files:/app/bot/files
+    depends_on:
+      telegram-bot-api:
+        condition: service_started
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
+  telegram-bot-api-data:
+
+
+networks:
+  downloader-bot:
+    driver: bridge
+    external: true
