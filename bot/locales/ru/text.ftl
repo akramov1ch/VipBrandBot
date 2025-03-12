@@ -10,7 +10,6 @@ button-send-message = 📨 Отправить сообщение
 button-stat = 📊 Статистика
 button-branchs = 🏪 Филиалы
 button-branch_type_man = 🧑‍💼 Мужчины
-button-branch_type_woman = 💄 Женщины
 button-branch_type_child = 🧒 Дети
 button-yes = 🟢 Да
 button-no = 🔴 Нет
