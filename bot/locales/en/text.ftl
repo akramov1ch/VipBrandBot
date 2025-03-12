@@ -10,7 +10,6 @@ button-send-message = 📨 Send Message
 button-stat = 📊 Statistics
 button-branchs = 🏪 Branches
 button-branch_type_man = 🧑‍💼 Men
-button-branch_type_woman = 💄 Women
 button-branch_type_child = 🧒 Children
 button-yes = 🟢 Yes
 button-no = 🔴 No
