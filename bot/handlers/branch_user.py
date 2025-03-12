@@ -19,7 +19,7 @@ async def show_user_branches(call: types.CallbackQuery, i18n: TranslatorRunner) 
         logger.exception(f"Error in show_user_branches: {str(e)}")
         await call.message.answer("Xatolik yuz berdi.")
 
-@router.callback_query(F.data.in_(["user_branch_type_man", "user_branch_type_woman", "user_branch_type_child"]))
+@router.callback_query(F.data.in_(["user_branch_type_man", "user_branch_type_child"]))
 async def show_user_branch_list(call: types.CallbackQuery, i18n: TranslatorRunner) -> None:
     try:
         branch_type = call.data.replace("user_branch_type_", "")
