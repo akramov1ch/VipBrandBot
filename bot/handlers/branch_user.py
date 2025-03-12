@@ -73,7 +73,7 @@ async def show_user_branch_details(call: types.CallbackQuery, i18n: TranslatorRu
 
         locale = i18n.locale
         branch_name = branch.name_ru if locale == "ru" else branch.name
-        google_maps_link = f"https://maps.app.goo.gl/?q={branch.latitude},{branch.longitude}"
+        google_maps_link = f"https://www.google.com/maps?q={branch.latitude},{branch.longitude}"
         instagram_link = f"[Instagram]({branch.instagram_link})" if branch.instagram_have and branch.instagram_link else "N/A"
 
         message_text = (
