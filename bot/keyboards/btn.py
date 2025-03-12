@@ -94,12 +94,6 @@ def branchs(i18n: TranslatorRunner, is_admin: bool = False) -> types.InlineKeybo
         ],
         [
             types.InlineKeyboardButton(
-                text=i18n.button.branch_type_woman(),
-                callback_data=f"{prefix}branch_type_woman"
-            ),
-        ],
-        [
-            types.InlineKeyboardButton(
                 text=i18n.button.branch_type_child(),
                 callback_data=f"{prefix}branch_type_child"
             ),
