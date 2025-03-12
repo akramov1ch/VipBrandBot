@@ -21,7 +21,7 @@ async def show_branches(call: types.CallbackQuery, i18n: TranslatorRunner) -> No
         logger.exception(f"Error in show_branches: {str(e)}")
         await call.message.answer("Xatolik yuz berdi. Loglarni tekshiring.")
 
-@router.callback_query(IsAdmin(), F.data.in_(["branch_type_man", "branch_type_woman", "branch_type_child"]))
+@router.callback_query(IsAdmin(), F.data.in_(["branch_type_man", "branch_type_child"]))
 async def show_branch_list(call: types.CallbackQuery, i18n: TranslatorRunner) -> None:
     try:
         branch_type = call.data.replace("branch_type_", "")
