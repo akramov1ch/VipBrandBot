@@ -21,8 +21,6 @@ button-branchs = 🏪 Filiallar
 
 button-branch_type_man = 🧑‍💼 Erkaklar
 
-button-branch_type_woman = 💄 Ayollar
-
 button-branch_type_child = 🧒 Bolalar
 
 button-yes = 🟢 Ha
