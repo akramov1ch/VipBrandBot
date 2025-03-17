@@ -1,4 +1,5 @@
 from aiogram import F, types, Router
+from aiogram.exceptions import TelegramBadRequest
 from fluentogram import TranslatorRunner
 from bot.utils.logger import logger
 from bot.keyboards import btn
@@ -10,7 +11,11 @@ router = Router()
 async def show_user_branches(call: types.CallbackQuery, i18n: TranslatorRunner) -> None:
     try:
         logger.info(f"show_user_branches called by user {call.from_user.id}, callback_data: {call.data}")
-        await call.message.delete()  # Avvalgi xabarni o‘chirish
+        try:
+            await call.message.delete() 
+        except TelegramBadRequest as e:
+            logger.warning(f"Xabarni o‘chirib bo‘lmadi: {e}")  
+        
         await call.message.answer(
             text=i18n.get("text-branch-home"),
             reply_markup=btn.branchs(i18n=i18n, is_admin=False)
@@ -18,7 +23,6 @@ async def show_user_branches(call: types.CallbackQuery, i18n: TranslatorRunner) 
     except Exception as e:
         logger.exception(f"Error in show_user_branches: {str(e)}")
         await call.message.answer("Xatolik yuz berdi.")
-
 @router.callback_query(F.data.in_(["user_branch_type_man", "user_branch_type_child"]))
 async def show_user_branch_list(call: types.CallbackQuery, i18n: TranslatorRunner) -> None:
     try:
@@ -92,7 +96,11 @@ async def show_user_branch_details(call: types.CallbackQuery, i18n: TranslatorRu
         ])
 
         photo = types.FSInputFile(path="./config/logo.jpg")
-        await call.message.delete()
+        try:
+            await call.message.delete() 
+        except TelegramBadRequest as e:
+            logger.warning(f"Xabarni o‘chirib bo‘lmadi: {e}") 
+        
         await call.message.answer_photo(
             photo=photo,
             caption=message_text,
