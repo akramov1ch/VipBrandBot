@@ -262,15 +262,16 @@ async def get_branch_instagram_choice(call: types.CallbackQuery, i18n: Translato
             await state.set_state(Form.get_branch_instagram_link)
         else:
             await call.message.edit_text(
-                text=i18n.get("text-branch-get_hours"),
+                text=i18n.get("text-branch-get_opening_hours"),  # Yangi matn
                 reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
                     [types.InlineKeyboardButton(text=i18n.get("button-back"), callback_data="back_to_branch_list")]
                 ])
             )
-            await state.set_state(Form.get_branch_hours)
+            await state.set_state(Form.get_branch_opening_hours)  # Yangi holat
     except Exception as e:
         logger.exception(f"Error in get_branch_instagram_choice: {str(e)}")
         await call.message.answer("Xatolik yuz berdi. Loglarni tekshiring.")
+
 
 @router.message(IsAdmin(), Form.get_branch_instagram_link)
 async def get_branch_instagram_link(m: types.Message, i18n: TranslatorRunner, state: FSMContext) -> None:
@@ -278,22 +279,37 @@ async def get_branch_instagram_link(m: types.Message, i18n: TranslatorRunner, st
         instagram_link = m.text
         await state.update_data(instagram_link=instagram_link)
         await m.answer(
-            text=i18n.get("text-branch-get_hours"),
+            text=i18n.get("text-branch-get_opening_hours"),  # Yangi matn
             reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
                 [types.InlineKeyboardButton(text=i18n.get("button-back"), callback_data="back_to_branch_list")]
             ])
         )
-        await state.set_state(Form.get_branch_hours)
+        await state.set_state(Form.get_branch_opening_hours)  # Yangi holat
     except Exception as e:
         logger.exception(f"Error in get_branch_instagram_link: {str(e)}")
         await m.answer("Xatolik yuz berdi. Loglarni tekshiring.")
 
-@router.message(IsAdmin(), Form.get_branch_hours)
-async def get_branch_hours(m: types.Message, i18n: TranslatorRunner, state: FSMContext) -> None:
+@router.message(IsAdmin(), Form.get_branch_opening_hours)
+async def get_branch_opening_hours(m: types.Message, i18n: TranslatorRunner, state: FSMContext) -> None:
     try:
-        hours = m.text
-        opening_hours, closing_hours = hours.split("-")
-        await state.update_data(opening_hours=opening_hours.strip(), closing_hours=closing_hours.strip())
+        opening_hours = m.text.strip()
+        await state.update_data(opening_hours=opening_hours)
+        await m.answer(
+            text=i18n.get("text-branch-get_closing_hours"),
+            reply_markup=types.InlineKeyboardMarkup(inline_keyboard=[
+                [types.InlineKeyboardButton(text=i18n.get("button-back"), callback_data="back_to_branch_list")]
+            ])
+        )
+        await state.set_state(Form.get_branch_closing_hours)
+    except Exception as e:
+        logger.exception(f"Error in get_branch_opening_hours: {str(e)}")
+        await m.answer("Xatolik yuz berdi. Loglarni tekshiring.")
+
+@router.message(IsAdmin(), Form.get_branch_closing_hours)
+async def get_branch_closing_hours(m: types.Message, i18n: TranslatorRunner, state: FSMContext) -> None:
+    try:
+        closing_hours = m.text.strip()
+        await state.update_data(closing_hours=closing_hours)
         await m.answer(
             text=i18n.get("text-branch-get_location"),
             reply_markup=types.ReplyKeyboardMarkup(
@@ -305,9 +321,9 @@ async def get_branch_hours(m: types.Message, i18n: TranslatorRunner, state: FSMC
         )
         await state.set_state(Form.get_branch_location)
     except Exception as e:
-        logger.exception(f"Error in get_branch_hours: {str(e)}")
+        logger.exception(f"Error in get_branch_closing_hours: {str(e)}")
         await m.answer("Xatolik yuz berdi. Loglarni tekshiring.")
-
+        
 @router.message(IsAdmin(), Form.get_branch_location, F.location)
 async def get_branch_location(m: types.Message, i18n: TranslatorRunner, state: FSMContext) -> None:
     try:

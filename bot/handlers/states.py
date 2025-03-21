@@ -13,5 +13,6 @@ class Form(StatesGroup):
     get_branch_phone = State()
     get_branch_instagram_choice = State()
     get_branch_instagram_link = State()
-    get_branch_hours = State()
+    get_branch_opening_hours = State()
+    get_branch_closing_hours = State()
     get_branch_location = State()

@@ -114,7 +114,9 @@ text-branch-get_instagram_choice = Yangi filialning Instagram profili bormi?
 
 text-branch-get_instagram_link = Instagram profil havolasini kiriting:
 
-text-branch-get_hours = Iltimos, filialning ochilish va yopilish vaqtini kiriting (masalan, 09:00-18:00):
+text-branch-get_opening_hours = Iltimos, filialning ochilish vaqtini kiriting (masalan, 09:00):
+
+text-branch-get_closing_hours = Iltimos, filialning yopilish vaqtini kiriting (masalan, 18:00):
 
 text-branch-save_error = Filialni saqlashda xatolik yuz berdi.
 
