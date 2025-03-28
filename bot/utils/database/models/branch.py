@@ -3,7 +3,6 @@ from bot.utils.database.models.base import Base
 
 class Branch(Base):
     __tablename__ = "branches"
-
     id = Column(Integer, primary_key=True)
     branch_type = Column(String, nullable=False)
     name = Column(String, nullable=False)

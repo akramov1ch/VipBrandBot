@@ -199,14 +199,20 @@ class Cruds:
         try:
             async with AsyncSessionLocal() as session:
                 async with session.begin():
-                    new_obj = Branch(**branch.model_dump())
+                    branch_data = branch.model_dump()
+                    # instagram_link None bo‘lsa, bo‘sh qatorga o‘zgartirish
+                    if branch_data["instagram_link"] is None:
+                        branch_data["instagram_link"] = ""
+                    logger.info(f"Creating branch with data: {branch_data}")
+                    new_obj = Branch(**branch_data)
                     session.add(new_obj)
                     await session.commit()
+                logger.info("Branch successfully created")
                 return True
         except Exception as e:
-            logger.exception(f"Database exception: {str(e)}")
+            logger.exception(f"Database exception occurred: {str(e)}")
             return False
-
+        
     @staticmethod
     async def get_branch_by_id(branch_id: int) -> Branch | None:
         try:

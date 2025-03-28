@@ -45,7 +45,7 @@ services:
       context: .
       dockerfile: ./bot/Dockerfile
     environment:
-      BOT_TOKEN: 8037850746:AAG6xtfRFugtpkkNoaitT8-mh1JLk1OM-Z8
+      BOT_TOKEN: 7593190779:AAGLqxNuV40bfxQ0nqg_ZLBlxzJ24JYWsgY
       BASE_SERVER_URL: http://telegram-bot-api:8081
       BASE_CHANNEL_ID: -1002195963454
       OWNER_TG_ID: 5773326948

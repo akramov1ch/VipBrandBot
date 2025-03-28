@@ -133,9 +133,16 @@ async def delete_branch_handler(call: types.CallbackQuery, i18n: TranslatorRunne
 @router.callback_query(IsAdmin(), F.data == "back_to_admin_menu")
 async def handle_back_to_admin_menu(call: types.CallbackQuery, i18n: TranslatorRunner) -> None:
     try:
-        await call.message.delete()
+        if call.message:
+            await call.message.delete()
+        else:
+            logger.warning("Xabar topilmadi, o‘chirish amalga oshirilmadi.")
+        admin_menu_text = i18n.get("text-admin-menu")
+        if not admin_menu_text:
+            logger.error("text-admin-menu lokalizatsiyasi topilmadi!")
+            admin_menu_text = "Admin menyusi"
         await call.message.answer(
-            text=i18n.get("text-admin-menu"),  # Admin menyusi uchun matn
+            text=admin_menu_text,
             reply_markup=btn.admin_menu(i18n=i18n)
         )
     except Exception as e:
@@ -329,6 +336,11 @@ async def get_branch_location(m: types.Message, i18n: TranslatorRunner, state: F
     try:
         location = m.location
         data = await state.get_data()
+        # instagram_link qiymatini tekshirish va agar None bo‘lsa "" qilish
+        instagram_link = data.get("instagram_link", "")
+        if instagram_link is None:
+            instagram_link = ""
+        
         branch = branch_types.BranchCreate(
             branch_type=data["branch_type"],
             name=data["name"],
@@ -340,7 +352,7 @@ async def get_branch_location(m: types.Message, i18n: TranslatorRunner, state: F
             opening_hours=data["opening_hours"],
             closing_hours=data["closing_hours"],
             instagram_have=data["instagram_have"],
-            instagram_link=data.get("instagram_link", "")
+            instagram_link=instagram_link
         )
         success = await Cruds.create_branch(branch)
         if success:
@@ -349,6 +361,7 @@ async def get_branch_location(m: types.Message, i18n: TranslatorRunner, state: F
                 reply_markup=btn.admin_menu(i18n=i18n)
             )
         else:
+            logger.error("Branch creation failed without specific error")
             await m.answer(
                 text=i18n.get("text-branch-save_error"),
                 reply_markup=types.ReplyKeyboardRemove()
@@ -356,4 +369,4 @@ async def get_branch_location(m: types.Message, i18n: TranslatorRunner, state: F
         await state.clear()
     except Exception as e:
         logger.exception(f"Error in get_branch_location: {str(e)}")
-        await m.answer("Xatolik yuz berdi. Loglarni tekshiring.")
+        await m.answer(f"Xatolik yuz berdi: {str(e)}. Loglarni tekshiring.")
